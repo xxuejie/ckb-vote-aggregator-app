@@ -19,8 +19,8 @@ int main() {
     return ret;
   }
 
-  uint32_t input_votes[64];
-  uint32_t output_votes[64];
+  uint32_t input_buffer[64];
+  uint32_t output_buffer[64];
   // One thing you might find here, is that there is no solution to destroy a
   // cell after the voting period is over. For a demo dapp, we will opt for the
   // simple path by not supporting destroying cells. In a production setup, you
@@ -31,25 +31,31 @@ int main() {
   // script which has the same hash as the included lock script hash. Note this
   // is exactly how owner lock works in Simple UDT script.
   uint64_t len = 256;
-  ret = ckb_checked_load_cell_data(input_votes, &len, 0, 0,
-                                   CKB_SOURCE_GROUP_INPUT);
+  ret = ckb_load_cell_data(input_buffer, &len, 0, 0, CKB_SOURCE_GROUP_INPUT);
   if (ret != CKB_SUCCESS) {
     return ret;
   }
-  if (len % 4 != 0) {
+  if (len < 4) {
     return ERROR_INVALID_DATA;
   }
-  uint8_t input_options = len / 4;
+  uint32_t input_options = input_buffer[0];
+  if (input_options > 63 || input_options * 4 + 4 > len) {
+    return ERROR_INVALID_DATA;
+  }
+  uint32_t *input_votes = &input_buffer[1];
   len = 256;
-  ret = ckb_checked_load_cell_data(output_votes, &len, 0, 0,
-                                   CKB_SOURCE_GROUP_OUTPUT);
+  ret = ckb_load_cell_data(output_buffer, &len, 0, 0, CKB_SOURCE_GROUP_OUTPUT);
   if (ret != CKB_SUCCESS) {
     return ret;
   }
-  if (len % 4 != 0) {
+  if (len < 4) {
     return ERROR_INVALID_DATA;
   }
-  uint8_t output_options = len / 4;
+  uint32_t output_options = output_buffer[0];
+  if (output_options > 63 || output_options * 4 + 4 > len) {
+    return ERROR_INVALID_DATA;
+  }
+  uint32_t *output_votes = &output_buffer[1];
   if (input_options != output_options) {
     return ERROR_INVALID_DATA;
   }
