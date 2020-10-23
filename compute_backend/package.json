@@ -1,0 +1,22 @@
+{
+  "name": "ckb-vote-aggregator-app-compute-backend",
+  "version": "0.1.0",
+  "description": "Aggregator compute backend for CKB vote app",
+  "main": "server.js",
+  "repository": "https://github.com/xxuejie/ckb-vote-aggregator-app",
+  "author": "Xuejie Xiao",
+  "license": "MIT",
+  "dependencies": {
+    "@ckb-lumos/common-scripts": "^0.13.1",
+    "@ckb-lumos/helpers": "^0.13.1",
+    "@ckb-lumos/indexer": "^0.13.1",
+    "deep-eql": "^4.0.0",
+    "json-rpc2": "^2.0.0"
+  },
+  "devDependencies": {
+    "prettier": "^2.1.2"
+  },
+  "scripts": {
+    "fmt": "prettier --write *.json *.js"
+  }
+}
