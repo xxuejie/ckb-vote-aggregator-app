@@ -1,5 +1,5 @@
-/node_modules/
-/public/build/
+node_modules/
+webapp/public/build/
 
 .DS_Store
 /build/
